@@ -1,4 +1,4 @@
-module github.com/paradeum-team/gin-prometheus-ext.git
+module github.com/paradeum-team/gin-prometheus-ext
 
 go 1.15
 
