@@ -116,6 +116,7 @@ type Prometheus struct {
 	MetricsPath string
 
 	ReqCntURLLabelMappingFn RequestCounterURLLabelMappingFn
+	MiddleWareHandlers []gin.HandlerFunc
 
 	// gin.Context string to use as a prometheus URL label
 	URLLabelFromContext string
@@ -367,12 +368,22 @@ func (p *Prometheus) registerMetrics(subsystem string) {
 // Use adds the middleware to a gin engine.
 func (p *Prometheus) Use(e *gin.Engine) {
 	e.Use(p.HandlerFunc())
+	if len(p.MiddleWareHandlers)>0{
+		for _,h :=range p.MiddleWareHandlers{
+			e.Use(h)
+		}
+	}
 	p.SetMetricsPath(e)
 }
 
 // UseWithAuth adds the middleware to a gin engine with BasicAuth.
 func (p *Prometheus) UseWithAuth(e *gin.Engine, accounts gin.Accounts) {
 	e.Use(p.HandlerFunc())
+	if len(p.MiddleWareHandlers)>0{
+		for _,h :=range p.MiddleWareHandlers{
+			e.Use(h)
+		}
+	}
 	p.SetMetricsPathWithAuth(e, accounts)
 }
 
